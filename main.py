@@ -67,22 +67,23 @@ tz = torch.tensor([0.])
 dim_equalizer = torch.tensor([0., 0., 0., 1.]).unsqueeze(0)
 I = torch.eye(3, dtype=torch.float32)
 I_full = torch.cat([I, torch.zeros((3, 1))], dim=1)
+
 # to 2d
-R = rodrigues(rx, ry, rz, 0)
-t = torch.tensor([[tx], [ty], [tz]], dtype=torch.float32)
+R = rodrigues(rx, ry, rz, 0)  # Rotation matrix
+t = torch.tensor([[tx], [ty], [tz]], dtype=torch.float32)  # Translation  matrix
+K = torch.tensor([[fx, 0, cx], [0, fy, cy], [0, 0, 1]])  # Camera Matrix
+
 RT = torch.cat([R, t], dim=1)
 RT = torch.cat([RT, dim_equalizer], dim=0)
-K = torch.tensor([[fx, 0, cx], [0, fy, cy], [0, 0, 1]])
-points_3d = torch.tensor([[x, y, z, 1.]])
-points_2d = (K @ I_full @ RT @ points_3d.T)
+points_3d_orginal = torch.tensor([[x, y, z, 1.]])
+points_3d_transformed = (K @ I_full @ RT @ points_3d_orginal.T)
 
 # to 3d
 K_inv = torch.linalg.pinv(K)
-points_2dw = torch.cat([points_2d, torch.ones((1, 1))], dim=0)
-points_2d = K_inv @ I_full @ points_2dw
-points_2dw = torch.cat([points_2d, torch.ones((1, 1))], dim=0)
-RT_inv = torch.cat([R.T, -R.T@t], dim=1)
+points_3d_transformedw = torch.cat([points_3d_transformed, torch.ones((1, 1))], dim=0)
+points_3d_transformed_world = K_inv @ I_full @ points_3d_transformedw
+points_3d_transformed_world = torch.cat([points_3d_transformed_world, torch.ones((1, 1))], dim=0)
+RT_inv = torch.cat([R.T, -R.T @ t], dim=1)
 RT_inv = torch.cat([RT_inv, dim_equalizer], dim=0)
-points_3d = RT_inv @ points_2dw
-print(points_3d)
-
+points_3d_orginal = RT_inv @ points_3d_transformed_world
+print(points_3d_orginal)
