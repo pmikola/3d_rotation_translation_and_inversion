@@ -3,8 +3,8 @@ import torch
 
 
 def rodrigues(rot_x, rot_y, rot_z, inv_flag):
-    rotation_vector = torch.tensor([rot_x, rot_y, rot_z],
-                                   dtype=torch.float32)
+    # rotation_vector = torch.tensor([rot_x, rot_y, rot_z],
+    #                                dtype=torch.float32)
     # theta = torch.norm(rotation_vector)
     # if theta.item() == 0:
     #     return torch.eye(3, dtype=torch.float32)
@@ -16,7 +16,6 @@ def rodrigues(rot_x, rot_y, rot_z, inv_flag):
     # #
     # I = torch.eye(3, dtype=torch.float32)
     # rotation_matrix = I + torch.sin(theta) * R + (1 - torch.cos(theta)) * R @ R
-    #
 
     if not inv_flag:
         sin_rx, cos_rx = torch.sin(rot_x), torch.cos(rot_x)
@@ -70,7 +69,6 @@ I = torch.eye(3, dtype=torch.float32)
 I_full = torch.cat([I, torch.zeros((3, 1))], dim=1)
 # to 2d
 R = rodrigues(rx, ry, rz, 0)
-R_inv = rodrigues(rx, ry, rz, 1)
 t = torch.tensor([[tx], [ty], [tz]], dtype=torch.float32)
 RT = torch.cat([R, t], dim=1)
 RT = torch.cat([RT, dim_equalizer], dim=0)
