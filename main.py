@@ -59,11 +59,11 @@ x = 0.33533
 y = 0.4494
 z = 0.2525
 rx = torch.tensor([30.])
-ry = torch.tensor([30.])
-rz = torch.tensor([30.])
+ry = torch.tensor([40.])
+rz = torch.tensor([50.])
 tx = torch.tensor([1.])
-ty = torch.tensor([0.])
-tz = torch.tensor([0.])
+ty = torch.tensor([2.])
+tz = torch.tensor([3.])
 dim_equalizer = torch.tensor([0., 0., 0., 1.]).unsqueeze(0)
 I = torch.eye(3, dtype=torch.float32)
 I_full = torch.cat([I, torch.zeros((3, 1))], dim=1)
